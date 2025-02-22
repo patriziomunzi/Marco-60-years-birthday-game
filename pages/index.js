@@ -132,9 +132,9 @@ export default function BirthdayGame() {
 
       {!gameOver ? (
         <div className="mt-4 flex gap-4">
-          <button onClick={() => movePlayer(-1)} className="bg-gray-700 text-white px-4 py-2 rounded-lg text-center">⬅️ Move Left</button>
-          <button onClick={() => movePlayer(1)} className="bg-gray-700 text-white px-4 py-2 rounded-lg text-center">➡️ Move Right</button>
-          <button onClick={shootFork} className="bg-red-500 text-white px-4 py-2 rounded-lg text-center">🍴 Shoot Fork</button>
+          <button onClick={() => movePlayer(-1)} className="bg-gray-700 text-white px-3 py-1 rounded-lg">⬅️ Left</button>
+          <button onClick={() => movePlayer(1)} className="bg-gray-700 text-white px-3 py-1 rounded-lg">➡️ Right</button>
+          <button onClick={shootFork} className="bg-red-500 text-white px-3 py-1 rounded-lg">🍴 Shoot</button>
         </div>
       ) : (
         <div className="mt-4 text-center">
