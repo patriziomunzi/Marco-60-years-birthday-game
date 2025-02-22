@@ -86,7 +86,7 @@ export default function BirthdayGame() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-black text-white bg-stars">
+    <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-black text-white relative" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=1600&q=80')", backgroundSize: 'cover', backgroundPosition: 'center' }}>
       <h1 className="text-2xl font-bold mb-4 text-center">🎉 Happy Birthday Marco! 🎉</h1>
       <p className="mb-4 text-lg text-center">Shoot the falling cakes like a star shooter! 🎂</p>
 
