@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "next dev",
-    "build": "next build && npx tailwindcss -o styles/output.css",
+    "build": "next build",
     "start": "next start"
   },
   "dependencies": {
