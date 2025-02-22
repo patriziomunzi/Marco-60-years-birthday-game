@@ -87,7 +87,7 @@ export default function BirthdayGame() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-black text-white bg-stars">
-      <h1 className="text-3xl font-bold mb-4 text-center">🎉 Happy Birthday Marco! 🎉</h1>
+      <h1 className="text-2xl font-bold mb-4 text-center">🎉 Happy Birthday Marco! 🎉</h1>
       <p className="mb-4 text-lg text-center">Shoot the falling cakes like a star shooter! 🎂</p>
 
       <div className="relative w-80 h-80 border border-gray-600 rounded-lg overflow-hidden">
@@ -132,9 +132,9 @@ export default function BirthdayGame() {
 
       {!gameOver ? (
         <div className="mt-4 flex gap-4">
-          <button onClick={() => movePlayer(-1)} className="bg-gray-700 text-white px-4 py-2 rounded-lg text-lg">⬅️ Move Left</button>
-          <button onClick={() => movePlayer(1)} className="bg-gray-700 text-white px-4 py-2 rounded-lg text-lg">➡️ Move Right</button>
-          <button onClick={shootFork} className="bg-red-500 text-white px-4 py-2 rounded-lg text-lg">🍴 Shoot Fork</button>
+          <button onClick={() => movePlayer(-1)} className="bg-gray-700 text-white px-4 py-2 rounded-lg text-center">⬅️ Move Left</button>
+          <button onClick={() => movePlayer(1)} className="bg-gray-700 text-white px-4 py-2 rounded-lg text-center">➡️ Move Right</button>
+          <button onClick={shootFork} className="bg-red-500 text-white px-4 py-2 rounded-lg text-center">🍴 Shoot Fork</button>
         </div>
       ) : (
         <div className="mt-4 text-center">
@@ -145,7 +145,7 @@ export default function BirthdayGame() {
 
       <p className="mt-4 text-xl font-bold">Score: {score}</p>
 
-      <footer className="mt-6 text-gray-400 text-lg">Made with ❤️ by Patrizio, Lucia, and Gabriele, with a little help from ChatGPT.</footer>
+      <footer className="mt-6 text-gray-400 text-center">Made with ❤️ by Patrizio, Lucia, and Gabriele, with a little help from ChatGPT.</footer>
     </div>
   );
 }
