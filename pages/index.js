@@ -90,7 +90,7 @@ export default function BirthdayGame() {
     <>
       <Head>
         <title>Happy Birthday Marco!</title>
-        <link rel="icon" href="/cake-favicon.png" type="image/png" />
+        <link rel="icon" href="/cake-favicon-2.png" type="image/png" />
       </Head>
       <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-black text-white relative" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1520034475321-cbe63696469a?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')", backgroundSize: 'cover', backgroundPosition: 'center' }}>
       <h1 className="text-2xl font-bold mb-4 text-center">🎉 Happy Birthday Marco! 🎉</h1>
