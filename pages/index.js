@@ -87,7 +87,6 @@ export default function BirthdayGame() {
   };
 
   return (
-    <>
     <Head>
       <link rel="icon" href="/cake-favicon.png" type="image/png" />
     </Head>
