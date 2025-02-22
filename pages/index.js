@@ -3,68 +3,92 @@ import { useState, useEffect } from "react";
 export default function BirthdayGame() {
   const [cakes, setCakes] = useState([]);
   const [score, setScore] = useState(0);
-  const [speed, setSpeed] = useState(2);
-  const [playerPosition, setPlayerPosition] = useState(50);
-  const [isShooting, setIsShooting] = useState(false);
+  const [speed, setSpeed] = useState(0.2);
+  const [playerPosition, setPlayerPosition] = useState(2);
+  const [forks, setForks] = useState([]);
+  const [gameOver, setGameOver] = useState(false);
 
   useEffect(() => {
-    const gameInterval = setInterval(() => {
-      updateCakes();
-      increaseDifficulty();
-    }, 50);
+    if (!gameOver) {
+      initializeCakes();
+      const gameInterval = setInterval(() => {
+        moveCakes();
+        moveForks();
+        checkCollisions();
+      }, 50);
+      return () => clearInterval(gameInterval);
+    }
+  }, [cakes, forks, gameOver]);
 
-    return () => clearInterval(gameInterval);
-  }, [cakes]);
-
-  const updateCakes = () => {
-    setCakes((prevCakes) =>
-      prevCakes
-        .map((cake) => ({ ...cake, top: cake.top + speed }))
-        .filter((cake) => cake.top < 100)
-    );
-
-    if (Math.random() < 0.1) {
-      spawnCake();
+  const initializeCakes = () => {
+    if (cakes.length === 0) {
+      let newCakes = [];
+      for (let i = 0; i < 5; i++) {
+        for (let j = 0; j < 3; j++) {
+          newCakes.push({ left: i * 20, top: j * 10 });
+        }
+      }
+      setCakes(newCakes);
     }
   };
 
-  const spawnCake = () => {
-    setCakes((prevCakes) => [...prevCakes, { left: Math.random() * 100, top: 0 }]);
+  const moveCakes = () => {
+    setCakes((prevCakes) =>
+      prevCakes.map((cake) => ({ ...cake, top: cake.top + speed }))
+    );
+    checkGameOver();
+  };
+
+  const moveForks = () => {
+    setForks((prevForks) =>
+      prevForks
+        .map((fork) => ({ ...fork, top: fork.top - 8 })) // Faster forks
+        .filter((fork) => fork.top > 0)
+    );
   };
 
   const shootFork = () => {
-    setIsShooting(true);
-    setTimeout(() => setIsShooting(false), 500);
-
-    setCakes((prevCakes) =>
-      prevCakes.filter(
-        (cake) => Math.abs(cake.left - playerPosition) > 5 || cake.top > 50
-      )
-    );
-
-    setScore((prevScore) => prevScore + 1);
+    setForks((prevForks) => [...prevForks, { left: playerPosition * 20, top: 85 }]);
   };
 
-  const increaseDifficulty = () => {
-    if (score % 5 === 0 && score > 0) {
-      setSpeed((prevSpeed) => prevSpeed + 0.5);
+  const checkCollisions = () => {
+    setCakes((prevCakes) => {
+      let hitCakes = 0;
+      const remainingCakes = prevCakes.filter((cake) => {
+        const isHit = forks.some(
+          (fork) => cake.left === fork.left && Math.abs(cake.top - fork.top) < 5
+        );
+        if (isHit) hitCakes++;
+        return !isHit;
+      });
+      if (hitCakes > 0) {
+        setScore((prevScore) => prevScore + hitCakes);
+      }
+      return remainingCakes;
+    });
+  };
+
+  const checkGameOver = () => {
+    if (cakes.some((cake) => cake.top > 85)) {
+      setGameOver(true);
     }
   };
 
   const movePlayer = (direction) => {
-    setPlayerPosition((prev) => Math.max(0, Math.min(100, prev + direction)));
+    setPlayerPosition((prev) => Math.max(0, Math.min(4, prev + direction)));
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-4 relative bg-blue-100">
-      <h1 className="text-2xl font-bold mb-4">🎉 Happy Birthday Marco! 🎉</h1>
-      <p className="mb-4">Shoot the falling cakes to celebrate Marco’s 60th birthday! 🎂</p>
+    <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gray-900 text-white">
+      <h1 className="text-3xl font-bold mb-4 text-center">🎉 Happy Birthday Marco! 🎉</h1>
+      <p className="mb-4 text-lg text-center">Shoot the falling cakes like a star shooter! 🎂</p>
 
-      <div className="relative w-full h-60 bg-gray-200 border border-gray-400 rounded-lg overflow-hidden">
+      {/* Game Area */}
+      <div className="relative w-80 h-80 bg-gray-800 border border-gray-600 rounded-lg overflow-hidden">
         {cakes.map((cake, index) => (
           <div
             key={index}
-            className="absolute text-2xl"
+            className="absolute text-2xl transition-all duration-200"
             style={{
               top: `${cake.top}%`,
               left: `${cake.left}%`,
@@ -75,36 +99,64 @@ export default function BirthdayGame() {
           </div>
         ))}
 
+        {forks.map((fork, index) => (
+          <div
+            key={index}
+            className="absolute text-xl transition-all duration-200"
+            style={{
+              top: `${fork.top}%`,
+              left: `${fork.left}%`,
+              transform: "translate(-50%, -50%)",
+            }}
+          >
+            🍴
+          </div>
+        ))}
+
+        {/* Player (60-year-old man) */}
         <div
-          className="absolute bottom-2 w-10 h-10"
+          className="absolute bottom-2 text-3xl"
           style={{
-            left: `${playerPosition}%`,
+            left: `${playerPosition * 20}%`,
             transform: "translateX(-50%)",
           }}
         >
           👴
         </div>
+      </div>
 
-        {isShooting && (
-          <div
-            className="absolute bottom-16 left-1/2 transform -translate-x-1/2 text-xl"
-            style={{ animation: "shooting-fork 0.5s" }}
+      {/* Controls */}
+      {!gameOver ? (
+        <div className="mt-4 flex gap-4">
+          <button
+            onClick={() => movePlayer(-1)}
+            className="bg-gray-700 text-white px-4 py-2 rounded-lg text-lg"
           >
-            🍴
-          </div>
-        )}
-      </div>
+            ⬅️ Move Left
+          </button>
+          <button
+            onClick={() => movePlayer(1)}
+            className="bg-gray-700 text-white px-4 py-2 rounded-lg text-lg"
+          >
+            ➡️ Move Right
+          </button>
+          <button
+            onClick={shootFork}
+            className="bg-red-500 text-white px-4 py-2 rounded-lg text-lg"
+          >
+            🍴 Shoot Fork
+          </button>
+        </div>
+      ) : (
+        <h2 className="mt-4 text-2xl text-red-500">Game Over! 🎂</h2>
+      )}
 
-      <div className="mt-4">
-        <button onClick={() => movePlayer(-10)} className="bg-gray-500 text-white px-4 py-2 rounded mr-2">⬅️ Move Left</button>
-        <button onClick={() => movePlayer(10)} className="bg-gray-500 text-white px-4 py-2 rounded">➡️ Move Right</button>
-        <button onClick={shootFork} className="bg-red-500 text-white px-4 py-2 rounded ml-4">🍴 Shoot Fork</button>
-      </div>
+      {/* Score */}
+      <p className="mt-4 text-xl font-bold">Score: {score}</p>
 
-      <p className="mt-4 text-lg font-bold">Score: {score}</p>
-
-      <footer className="absolute bottom-4 text-center w-full text-gray-600 text-sm">
-        <p>Made with ❤️ by Patrizio, Lucia, and Gabriele, with a little help from ChatGPT</p>
+      {/* Footer */}
+      <footer className="mt-6 text-gray-400 text-lg">
+        Made with ❤️ by Patrizio, Lucia, and Gabriele, with a little help from ChatGPT.
       </footer>
     </div>
   );
